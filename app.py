@@ -10,11 +10,13 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 import re
+import zipfile
 
 @st.cache_data
 def load_data():
-    url = f"https://drive.google.com/uc?id=1AAz4llKgAAgouEhAZCDN2eqVhVrEmU_D"
-    df = pd.read_csv(url)
+    with zipfile.ZipFile("TXT_GEN.zip", "r") as zip_ref:
+        zip_ref.extractall(".")
+    df = pd.read_csv("TXT_GEN.csv")
     df['text'] = df['text'].apply(lambda x: re.sub(r'\s+', ' ', str(x)).strip())
     df.dropna(subset=['text', 'subject'], inplace=True)
     label_encoder = LabelEncoder()
